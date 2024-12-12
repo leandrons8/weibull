@@ -100,7 +100,7 @@ function plot(){
             x: t,
             y: f,
             customdata: customdata,
-            hovertemplate: "%{y:.2} ! R: %{customdata[0]:.2%} ! F: %{customdata[1]:.2%}",
+            hovertemplate: "%{y:.2} | R: %{customdata[0]:.2%} | F: %{customdata[1]:.2%}",
             name: entries[i].children[0].children[0].children[0].innerHTML,
             type: "line"
         })
