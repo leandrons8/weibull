@@ -10,7 +10,6 @@ function makeDiv(){
     remove.onclick = function (){
         let toremove = this.parentNode.parentNode.parentNode
         toremove.parentNode.removeChild(toremove)
-        updateTitles()
         plot()
     }
 
@@ -31,9 +30,15 @@ function makeDiv(){
     inputbeta.className = "form-control"
     inputbeta.type = "number"
     inputbeta.required = true
+    inputbeta.min = 0.1
+    inputbeta.step = 0.1
+    inputbeta.value = 1
+    inputbeta.onchange = function (){
+        plot()
+    }
 
     let divbeta = document.createElement("div")
-    divbeta.className = "input-group"
+    divbeta.classList = "input-group py-1"
     divbeta.appendChild(spanbeta)
     divbeta.appendChild(inputbeta)
 
@@ -44,15 +49,16 @@ function makeDiv(){
     let inputeta = document.createElement("input")
     inputeta.className = "form-control"
     inputeta.type = "number"
-    inputeta.required = true
+    inputeta.disabled = true
+    inputeta.readOnly = true
 
     let diveta = document.createElement("div")
-    diveta.className = "input-group"
+    diveta.classList = "input-group"
     diveta.appendChild(spaneta)
     diveta.appendChild(inputeta)
 
     let container = document.createElement("div")
-    container.classList = ["container", "g-0"]
+    container.className = "col-3"
     container.appendChild(titlerow)
     container.appendChild(divbeta)
     container.appendChild(diveta)
@@ -60,24 +66,16 @@ function makeDiv(){
     let entries = document.getElementById("entries")
     entries.appendChild(container)
 
-    updateTitles()
     plot()
 }
 
-function updateTitles(){
-    let entries = document.getElementById("entries")
-    let i = 1
-    for (div of entries.children){
-        div.children[0].children[0].children[0].innerHTML = "Distribution " + i
-        i++
-    }
-}
 
 function plot(){
     let entries = document.getElementById("entries")
+    let mttf = parseFloat(document.getElementById("mttf").value)
     var steps = 100
     var start = 0
-    var stop = 10
+    var stop = mttf*3
     var step = (stop - start)/(steps-1)
     var t = []
     var data = []
@@ -86,17 +84,28 @@ function plot(){
         t.push(start + step*i)
     }
 
-    for (entry of entries.children){
-        let beta = parseFloat(entry.children[1].children[1].value)
-        let eta = parseFloat(entry.children[2].children[1].value)
+    for (let i = 1, max=entries.children.length; i < max; i++){
+        entries.children[i].children[0].children[0].children[0].innerHTML = "Distribution " + i
+        let beta = parseFloat(entries.children[i].children[1].children[1].value)
+        let eta = mttf/math.gamma(1/beta+1)
+        console.log(eta)
+        entries.children[i].children[2].children[1].value = eta
         let f = []
+        // let fail = []
+        // let rely = []
         for (var t_ of t){
             f.push(beta/eta*(t_/eta)**(beta-1)*Math.exp(-1*(t_/eta)**beta))
+            // rely.push(Math.exp(-1*(t_/eta)**beta))
         }
+        // for (var r of rely){
+        //     fail.push(1 - r)
+        // }
         data.push({
             x: t,
             y: f,
-            name: entry.children[0].children[0].children[0].innerHTML,
+            // customdata: {f: fail, r: rely},
+            // hovertemplate: "",
+            name: entries.children[i].children[0].children[0].children[0].innerHTML,
             type: "line"
         })
     }
@@ -105,10 +114,28 @@ function plot(){
         hovermode: 'x unified',
         title: {
             text: 'Weibull Distribution'
-        }
+        },
+        shapes: [{
+            label: {
+                text: "MTTF",
+                textposition: "middle"
+            },
+            line: {
+                color: "red",
+                dash: "dash"
+            },
+            type: "line",
+            x0: mttf,
+            x1: mttf,
+            xref: "x",
+            y0: 0,
+            y1: 1,
+            yref: "y domain"
+        }]
     }
 
-    Plotly.newPlot('plot', data, layout);
+    Plotly.newPlot('plot', data, layout)
 }
 
+makeDiv()
 plot()
