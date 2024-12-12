@@ -71,7 +71,7 @@ function makeDiv(){
 
 
 function plot(){
-    let entries = document.getElementById("entries")
+    let entries = document.getElementById("entries").children
     let mttf = parseFloat(document.getElementById("mttf").value)
     var steps = 100
     var start = 0
@@ -84,28 +84,24 @@ function plot(){
         t.push(start + step*i)
     }
 
-    for (let i = 1, max=entries.children.length; i < max; i++){
-        entries.children[i].children[0].children[0].children[0].innerHTML = "Distribution " + i
-        let beta = parseFloat(entries.children[i].children[1].children[1].value)
+    for (let i = 1, max=entries.length; i < max; i++){
+        entries[i].children[0].children[0].children[0].innerHTML = "PDF " + i
+        let beta = parseFloat(entries[i].children[1].children[1].value)
         let eta = mttf/math.gamma(1/beta+1)
-        console.log(eta)
-        entries.children[i].children[2].children[1].value = eta
+        entries[i].children[2].children[1].value = eta
+        let customdata = []
         let f = []
-        // let fail = []
-        // let rely = []
         for (var t_ of t){
-            f.push(beta/eta*(t_/eta)**(beta-1)*Math.exp(-1*(t_/eta)**beta))
-            // rely.push(Math.exp(-1*(t_/eta)**beta))
+            let r = Math.exp(-1*(t_/eta)**beta)
+            f.push(beta/eta*(t_/eta)**(beta-1)*r)
+            customdata.push([r, 1-r])
         }
-        // for (var r of rely){
-        //     fail.push(1 - r)
-        // }
         data.push({
             x: t,
             y: f,
-            // customdata: {f: fail, r: rely},
-            // hovertemplate: "",
-            name: entries.children[i].children[0].children[0].children[0].innerHTML,
+            customdata: customdata,
+            hovertemplate: "%{y:.2} ! R: %{customdata[0]:.2%} ! F: %{customdata[1]:.2%}",
+            name: entries[i].children[0].children[0].children[0].innerHTML,
             type: "line"
         })
     }
