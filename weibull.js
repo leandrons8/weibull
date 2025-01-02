@@ -96,9 +96,6 @@ function plot(){
 
     const layout = {
         hovermode: 'x unified',
-        title: {
-            text: 'Weibull Distribution'
-        },
         shapes: [{
             label: {
                 text: "MTTF",
