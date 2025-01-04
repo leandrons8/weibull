@@ -1,5 +1,5 @@
 function renderBody(){
-    const body = document.getElementById("body")
+    const body = document.body
 
     const nav = document.createElement("nav")
     nav.className = "navbar sticky-top bg-body-tertiary"
