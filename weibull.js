@@ -1,3 +1,74 @@
+function renderBody(){
+    const body = document.getElementById("body")
+
+    const nav = document.createElement("nav")
+    nav.className = "navbar sticky-top bg-body-tertiary"
+
+    const navcontainer = document.createElement("div")
+    navcontainer.className = "container"
+
+    const navbrand = document.createElement("a")
+    navbrand.className = "navbar-brand"
+    navbrand.innerText = "Weibull Distribution"
+
+    const plotdiv = document.createElement("div")
+    plotdiv.className = "container"
+    plotdiv.id = "plot"
+
+    const entriesdiv = document.createElement("div")
+    entriesdiv.className = "container p-3"
+
+    const row = document.createElement("div")
+    row.className = "row align-items-end g-3"
+    row.id = "entries"
+
+    const col = document.createElement("div")
+    col.className = "col-3"
+
+    const inputgroup = document.createElement("div")
+    inputgroup.className = "input-group py-1"
+
+    const inputgrouptext = document.createElement("span")
+    inputgrouptext.className = "input-group-text"
+    inputgrouptext.innerText = "MTTF"
+
+    const input = document.createElement("input")
+    input.className = "form-control"
+    input.id = "mttf"
+    input.type = "number"
+    input.min = 0.1
+    input.step = 0.1
+    input.value = 1
+    input.required = true
+    input.onchange = function (){
+        plot()
+    }
+
+    const buttondiv = document.createElement("div")
+    buttondiv.className = "d-grid gap-1"
+
+    const button = document.createElement("button")
+    button.className = "btn btn-primary"
+    button.type = "button"
+    button.onclick = function (){
+        makeDiv()
+    }
+
+    const buttonicon = document.createElement("i")
+    buttonicon.className = "bi bi-plus-lg"
+
+    body.append(nav, plotdiv, entriesdiv)
+    nav.append(navcontainer)
+    navcontainer.append(navbrand)
+    entriesdiv.append(row)
+    row.append(col)
+    col.append(inputgroup, buttondiv)
+    inputgroup.append(inputgrouptext, input)
+    buttondiv.append(button)
+    button.append(buttonicon)
+}
+
+
 function makeDiv(){
     const
         entries = document.getElementById("entries"),
@@ -118,5 +189,6 @@ function plot(){
     Plotly.newPlot('plot', data, layout)
 }
 
+renderBody()
 makeDiv()
 plot()
