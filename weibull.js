@@ -7,7 +7,7 @@ function renderBody(){
     const navcontainer = document.createElement("div")
     navcontainer.className = "container"
 
-    const navbrand = document.createElement("a")
+    const navbrand = document.createElement("span")
     navbrand.className = "navbar-brand"
     navbrand.innerText = "Weibull Distribution"
 
