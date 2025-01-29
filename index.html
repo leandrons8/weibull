@@ -11,6 +11,31 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjs/lib/browser/math.min.js"></script>
   </head>
   <body>
+    <nav class="navbar sticky-top bg-body-tertiary">
+      <div class="container">
+        <span class="navbar-brand">
+          Weibull Distribution
+        </span>
+      </div>
+    </nav>
+    <div class="container" id="plot"></div>
+    <div class="container p-3">
+      <div class="row align-items-end g-3" id="entries">
+        <div class="col-3">
+          <div class="input-group py-1">
+            <span class="input-group-text">
+              MTTF
+            </span>
+            <input class="form-control" id="mttf" type="number" min="0.1" step="0.1" value="1" required onchange="plot()">
+          </div>
+          <div class="d-grid gap-1">
+            <button class="btn btn-primary" type="button" onclick="makeDiv()">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="weibull.js"></script>
   </body>
 </html>
